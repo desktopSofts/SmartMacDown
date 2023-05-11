@@ -23,3 +23,7 @@ npm run electron:serve
 See [Configuration Reference](https://cli.vuejs.org/config/).
 see [electron](https://www.electronjs.org/zh/)
 see [mavonEditor](https://github.com/hinesboy/mavonEditor)
+
+# TODO
+1. 文件列表展示风格
+2. 
