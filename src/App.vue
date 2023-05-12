@@ -5,13 +5,13 @@
         className="col-2 left-panel">
         <SearchFile title="我的文档" :modelValue="searchText" @update:modelValue="modelValue"></SearchFile>
         <FileList :files="showFiles" @update:editFile="editFile" @update:deleteFile="deleteFile"
-          @update:reFileName="saveFile"></FileList>
+          @update:reFileName="saveFile" @update:deleteFileRecord="deleteFileRecord"></FileList>
       </div>
       <div style="background-color:#c9d8cd;min-height:100vh;padding: 0;" className="col-10 right-panel">
         <TabList :files="openFiles" :activeItem="activeId" :unSaveItems="unSaveIds" @update:changeFile="changeFile"
           @update:closeFile="closeFile" />
         <MD_Editor style="min-height:100vh;" v-if="activeFile" :content="!activeFile ? '' : activeFile.body"
-          @update:markdownChange="markdownChange" @update:save="saveCurrentEditFile"/>
+          @update:markdownChange="markdownChange" @update:save="saveCurrentEditFile" />
         <div v-else className="init-page">
           新建或者导入具体的文档
         </div>
@@ -38,14 +38,20 @@ import useIpcRenderer from './hooks/useIpcRenderer'
 const path = window.require('path')
 const { remote } = window.require('electron')
 const Store = window.require('electron-store')
-const savedPath = remote.app.getPath('desktop') + '/testMD'
-// console.log(TAG,savedPath);
+
+
 console.log(TAG, remote.app.getPath('userData'));
 
 const fileStore = new Store({ 'name': 'filesInfo' })
 fileStore.set('name', '==smartApi==')
 console.log(TAG, fileStore.get('name'));
 
+//======================文档保存路径
+let globalFileSavePath = fileStore.get('saveFilePath')
+if (!globalFileSavePath) {
+  globalFileSavePath = remote.app.getPath('desktop')
+}
+console.log(TAG, globalFileSavePath);
 // store.delete('name')
 // console.log(TAG,'删除后：'+store.get('name'));
 // let filesFromStore=fileStore.get('files')||{}
@@ -71,17 +77,31 @@ export default {
 
     }
   }
-  ,mounted(){
-    console.log(TAG,'mounted called!');
+  , mounted() {
+    console.log(TAG, 'mounted called!');
     useIpcRenderer({
-      'execute-create-file':this.createFile
-      ,'execute-save-file':this.saveCurrentEditFile
-      ,'execute-import-file':this.importFiles
+      'execute-create-file': this.createFile
+      , 'execute-save-file': this.saveCurrentEditFile
+      , 'execute-import-file': this.importFiles
+      , 'execute-save-file-path': this.saveFilePath
     }
     )
   }
-  ,methods: {
-    saveInforToStore(saveFiles) {
+  , methods: {
+    saveFilePath() {
+      console.log(TAG, '当前保存路径是：' + globalFileSavePath);
+      remote.dialog.showOpenDialog({
+        defaultPath: globalFileSavePath
+        , buttonLabel: '保存路径'
+        , title: 'md文档保存路径'
+        , properties: ['openDirectory', 'createDirectory']
+      }).then((ret) => {
+        globalFileSavePath = ret.filePaths[0]
+        fileStore.set('saveFilePath', globalFileSavePath)
+        console.log(TAG, fileStore.get('saveFilePath'));
+      })
+    }
+    , saveInforToStore(saveFiles) {
       console.log(TAG, 'saveInforToStore called!');
       const storeObj = objToArr(saveFiles).reduce((ret, file) => {
         const { id, title, createTime, path } = file
@@ -96,7 +116,7 @@ export default {
       fileStore.set('files', storeObj)
     }
     , saveCurrentEditFile() {
-      console.log(TAG,'saveCurrentEditFile called!');
+      console.log(TAG, 'saveCurrentEditFile called!');
       writeFile(this.activeFile.path, this.activeFile.body).then(() => {
         this.unSaveIds = this.unSaveIds.filter(id => id != this.activeFile.id)
       })
@@ -127,7 +147,7 @@ export default {
       if (itemExsit) {
         newTitle += '_copy'
       }
-      let newPath = isNew ? path.join(savedPath, newTitle + '.md') : path.join(path.dirname(this.files[id].path), newTitle + '.md')
+      let newPath = isNew ? path.join(globalFileSavePath, newTitle + '.md') : path.join(path.dirname(this.files[id].path), newTitle + '.md')
       let itemFile = this.files[id]
       let oldPath = itemFile.path
 
@@ -152,7 +172,7 @@ export default {
         id: newId,
         title: '',
         isNew: true,
-        body: '## 初始化内容',
+        body: '',
         createTime: new Date().getTime()
       }
       this.files[newId] = newFile
@@ -204,6 +224,12 @@ export default {
         }
 
       })
+    }
+    , deleteFileRecord(fileId) {
+      console.log(TAG, 'deleteFileRecord called!fileId=' + fileId);
+      delete this.files[fileId]
+      this.saveInforToStore(this.files)
+      this.closeFile(fileId)
     }
     , deleteFile(fileId) {
       console.log(TAG, 'deleteFile called!fileId=' + fileId);

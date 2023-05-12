@@ -8,13 +8,13 @@ const template = [
         label: app.name,
         submenu: [
             { role: 'about' },
-            { type: 'separator' },
-            { role: 'services' },
-            { type: 'separator' },
-            { role: 'hide' },
-            { role: 'hideOthers' },
-            { role: 'unhide' },
-            { type: 'separator' },
+            // { type: 'separator' },
+            // { role: 'services' },
+            // { type: 'separator' },
+            // { role: 'hide' },
+            // { role: 'hideOthers' },
+            // { role: 'unhide' },
+            // { type: 'separator' },
             { role: 'quit' }
         ]
     }] : []),
@@ -51,6 +51,13 @@ const template = [
                 , click(menuItem, browserWindow, event) {
                     browserWindow.webContents.send('execute-search-file')
 
+                }
+            }
+            , {
+                label: '保存路径设置'
+                , accelerator: 'CmdOrCtrl+P'
+                , click(menuItem, browserWindow, event) {
+                    browserWindow.webContents.send('execute-save-file-path')
                 }
             }
 

@@ -8,8 +8,8 @@
             <span v-if="(editItem != file.id) && !file.isNew" className="col-7" v-on:click="editFile(file.id)">
                 {{ file.title }}
             </span>
-            <input v-if="(editItem == file.id) || file.isNew" className="col-7" :value="file.title"
-                @input="setTitleValue" @keyup="keyupClick" />
+            <input v-if="(editItem == file.id) || file.isNew" className="col-7" :value="file.title" @input="setTitleValue"
+                @keyup="keyupClick" />
             <span v-if="(editItem == file.id) || file.isNew" className="col-4" @click="closeEditStatus">
                 <font-awesome-icon icon="fa-solid fa-xmark" />
             </span>
@@ -32,7 +32,13 @@ export default ({
         files: Object
         , editFileListItem: String
     },
-    emits: ['update:editFile', 'update:deleteFile', 'update:reFileName', 'update:editItem']
+    emits: ['update:editFile'
+        , 'update:deleteFile'
+        , 'update:reFileName'
+        , 'update:editItem'
+        , 'update:deleteFileRecord'
+
+    ]
     , data() {
         return {
             editItem: '',
@@ -53,10 +59,14 @@ export default ({
             console.log(TAG, 'created -deleteItem called!');
             let retNode = getParentNode(currentEle.value, 'file-item')
             this.editItem = retNode.id
-            console.log(TAG,"editItem="+ this.editItem);
+            console.log(TAG, "editItem=" + this.editItem);
 
         }
-        const deleteItem=()=>{
+        const deleteFileRecord = () => {
+            let retNode = getParentNode(currentEle.value, 'file-item')
+            this.$emit('update:deleteFileRecord', retNode.id)
+        }
+        const deleteItem = () => {
             let retNode = getParentNode(currentEle.value, 'file-item')
             this.deleteFile(retNode.id)
 
@@ -67,18 +77,22 @@ export default ({
                 click: renameItem
             },
             {
-                label: '删除'
+                label: '删除记录'
+                , click: deleteFileRecord
+            }
+            , {
+                label: '删除记录&文件'
                 , click: deleteItem
             }
         ]
-        currentEle = useContextMenu(contextTemp,'.menu-box')
+        currentEle = useContextMenu(contextTemp, '.menu-box')
     }, beforeMonut() {
         console.log(TAG, 'beforeMonut() called!');
 
     }
     , mounted() {
         console.log(TAG, 'mounted() called!');
-        
+
     }, beforeUpdate() {
         console.log(TAG, 'beforeUpdate() called!');
         let newFile = objToArr(this.files).find(file => file.isNew)
@@ -87,11 +101,11 @@ export default ({
             this.value = newFile.title
             console.log(TAG, 'editItem=' + this.editItem);
         }
-        
+
 
     }, updated() {
         console.log(TAG, 'updated called!');
-        
+
     }
     , methods: {
 
