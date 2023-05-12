@@ -25,14 +25,13 @@ async function createWindow() {
   const win = new BrowserWindow({
     width: 1000,
     height: 900,
-    // frame:false,
+    // frame: false,  // 去掉默认的标题栏
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
       contextIsolation:false
     }
   })
-
   let menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
 

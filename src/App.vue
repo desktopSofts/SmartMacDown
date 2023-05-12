@@ -1,21 +1,16 @@
 <template>
   <div className="App contaniner-fluid px-0">
     <div className="row no-gutters">
-      <div style="position: relative; background-color: #7b8c7c; min-height:100vh;padding: 0;"
-        className="col-3 left-panel">
+      <div style="position: relative; background-color: #7b8c7c; min-height:100vh;padding: 0px;"
+        className="col-2 left-panel">
         <SearchFile title="我的文档" :modelValue="searchText" @update:modelValue="modelValue"></SearchFile>
         <FileList :files="showFiles" @update:editFile="editFile" @update:deleteFile="deleteFile"
           @update:reFileName="saveFile"></FileList>
-
-        <!-- <div class="btn_list">
-          <ButtomItem title="新建" icon="fa-plus" classValue="background-color:red ;" @update:createFile="createFile" />
-          <ButtomItem title="导入" icon="fa-file-import" @update:createFile="importFiles" />
-        </div> -->
       </div>
-      <div style="background-color:#c9d8cd;min-height:100vh;padding: 0;" className="col-9 right-panel">
+      <div style="background-color:#c9d8cd;min-height:100vh;padding: 0;" className="col-10 right-panel">
         <TabList :files="openFiles" :activeItem="activeId" :unSaveItems="unSaveIds" @update:changeFile="changeFile"
           @update:closeFile="closeFile" />
-        <MD_Editor v-if="activeFile" :content="!activeFile ? '' : activeFile.body"
+        <MD_Editor style="min-height:100vh;" v-if="activeFile" :content="!activeFile ? '' : activeFile.body"
           @update:markdownChange="markdownChange" @update:save="saveCurrentEditFile"/>
         <div v-else className="init-page">
           新建或者导入具体的文档
@@ -292,5 +287,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   /* margin-top: 10px; */
+  overflow: hidden;
 }
 </style>
