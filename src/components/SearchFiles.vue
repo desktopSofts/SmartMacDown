@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!searchActive" style="border-bottom: 1px solid #fff;"
+    <div v-if="!searchActive" style="border-bottom: 1px solid #fff; padding-left: 8px;"
         className="d-flex align-items-center justify-content-between">
         <span class="span">{{ title }}</span>
         <span class="span" @click="setSearchActive(true)">

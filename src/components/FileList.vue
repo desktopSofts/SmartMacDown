@@ -1,9 +1,9 @@
 <template>
     <div className="list-group list-group-flush menu-box">
-        <li v-for="file in files" :key="file.id" style="background: none;color: #fff;"
+        <li v-for="file in files" :key="file.id" style="background: none;color: #fff;padding-left:18px"
             className="list-group-item d-flex align-items-center file-item" ref="id" :id="file.id">
             <span v-if="(editItem != file.id) && !file.isNew" className="col-1">
-                <font-awesome-icon icon="fa-solid fa-file" />
+                <font-awesome-icon icon="fa-solid fa-file-lines" />
             </span>
             <span v-if="(editItem != file.id) && !file.isNew" className="col-7" v-on:click="editFile(file.id)">
                 {{ file.title }}

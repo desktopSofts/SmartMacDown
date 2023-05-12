@@ -11,13 +11,13 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
     faUserSecret, faMagnifyingGlass,
     faXmark, faFile, faPenToSquare, faTrashAlt
-    , faFileImport, faPlus
+    , faFileImport, faPlus,faFileLines
 } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
 library.add(faUserSecret, faMagnifyingGlass
     , faXmark, faFile, faPenToSquare, faTrashAlt
-    , faFileImport, faPlus
+    , faFileImport, faPlus,faFileLines
     )
 
 // vue3 使用图标组件例子如下：
