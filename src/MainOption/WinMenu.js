@@ -30,6 +30,14 @@ const template = [
                 }
             }
             , {
+                label: '打开'
+                , accelerator: 'CmdOrCtrl+O'
+                , click(menuItem, browserWindow, event) {
+                    browserWindow.webContents.send('execute-import-file')
+
+                }
+            }
+            , {
                 label: '保存'
                 , accelerator: 'CmdOrCtrl + S'
                 , click(menuItem, browserWindow, event) {
@@ -45,14 +53,7 @@ const template = [
 
                 }
             }
-            , {
-                label: '导入'
-                , accelerator: 'CmdOrCtrl+O'
-                , click(menuItem, browserWindow, event) {
-                    browserWindow.webContents.send('execute-import-file')
 
-                }
-            }
             , isMac ? { role: 'close' } : { role: 'quit' }
         ]
     },
