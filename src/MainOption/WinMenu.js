@@ -91,7 +91,7 @@ const template = [
         submenu: [
             { label: '刷新', accelerator: 'CmdOrCtrl + R', role: 'reload' },
             { label: '强制刷新', role: 'forceReload' },
-            { label: '开发者工具',role: 'toggleDevTools' },
+            { label: '开发者工具', role: 'toggleDevTools' },
             { type: 'separator' },
             {
                 label: '最大化', accelerator: (() => {
@@ -118,7 +118,7 @@ const template = [
     {
         label: '窗口',
         submenu: [
-            {label: '最小化', accelerator: 'CmdOrCtrl + M', role: 'minimize' },
+            { label: '最小化', accelerator: 'CmdOrCtrl + M', role: 'minimize' },
             { role: 'zoom' },
             ...(isMac ? [
                 { type: 'separator' },
@@ -135,10 +135,10 @@ const template = [
         role: 'help',
         submenu: [
             {
-                label: '更多',
+                label: '联系我们',
                 click: async () => {
                     const { shell } = require('electron')
-                    await shell.openExternal('https://electronjs.org')
+                    await shell.openExternal('mailto:lichongmac@163.com')
                 }
             }
         ]
